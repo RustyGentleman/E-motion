@@ -1,0 +1,35 @@
+@layout.app({ class: ['flex', 'f-c'], authUser })
+	@slot('meta')
+		<style>
+			#error {
+				display: grid;
+				grid-template-areas: 'a b' 'a c';
+				div:first-child {
+					height: 6rem;
+					font-size: 8rem;
+					grid-area: a;
+					span {
+						color: var(--c-error);
+						transform: translateY(-1.5rem);
+					}
+				}
+				div:nth-child(2) {
+					font-size: 3rem;
+					grid-area: b;
+				}
+				div:last-child {
+					grid-area: c;
+					padding-left: 1.6rem;
+				}
+			}
+			body { background-color: var(--c-error) !important }
+		</style>
+	@end
+	@slot('main')
+		<div id="error">
+			<div class="flex f-c"><span>404</span></div>
+			<div class="flex f-c">- Page not found</div>
+			<div>The page you requested does not exist.</div>
+		</div>
+	@end
+@end

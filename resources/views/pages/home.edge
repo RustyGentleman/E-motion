@@ -1,0 +1,145 @@
+@layout.app({ title: 'Home', authUser, affects, listers })
+	@slot('meta')
+		<meta name="description" content="The emporium of exotic emotions">
+		<style>
+			@keyframes spin {
+				from {transform: rotate(0deg)}
+				to {transform: rotate(360deg)}
+			}
+			main { text-align: center }
+			section { margin-block: 10rem; }
+			#hero {
+				h1 {
+					font-size: 8rem;
+					line-height: .5em;
+					p {
+						font-size: 3rem;
+						transform: translateY(.3rem);
+					}
+					#f, #oul { display: inline-block }
+					#f { transform: translateY(1.2rem) }
+					#oul { transform: translateY(-1.2rem) }
+				}
+			}
+			#values {
+				text-align: left;
+				svg {
+					width: 30ch;
+					height: auto;
+					overflow: visible;
+					#orbit1 {
+						animation: spin 60s linear infinite;
+						transform-origin: center center;
+					}
+					#orbit2 {
+						animation: spin 30s linear infinite reverse;
+						transform-origin: center center;
+						animation-delay: -10s;
+					}
+				}
+				> div {
+					> div { width: 50ch }
+					> div:nth-child(2) { transform: translateX(1rem) }
+				}
+			}
+			#featured .grid {
+				grid-template-columns: 25ch 25ch 25ch;
+			}
+		</style>
+	@endslot
+
+	<section id="hero" class="flex f-c">
+		<div class="flex f-c f-col">
+			<h1>
+				<span id="f">F</span>ood
+				<p class="i">for the</p>
+				S<span id="oul">oul</span>
+			</h1>
+			<br>
+			<br>
+			<p>Experience new and interesting emotions.<br>
+			Recapture fleeting feelings from the past.</p>
+			<br>
+			@button()
+				<a href="/products">Explore</a>
+			@end
+		</div>
+	</section>
+	<section id="values" class="flex f-c gap-2">
+		<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none">
+			<g id="E-motion values">
+				<path d="M404.08 116.245C406.477 117.023 409.067 116.808 411.29 115.62C413.511 114.433 415.183 112.37 415.929 109.912C416.675 107.454 416.431 104.81 415.243 102.589C414.055 100.366 412.021 98.7475 409.596 98.063C409.596 98.063 409.596 98.063 409.596 98.063C401.06 95.6383 392.294 94.1327 383.519 93.412C224.51 92.8033 99.1708 241.214 98.792 389.562C98.7292 397.937 99.0156 405.982 99.653 414.339C99.3318 405.964 99.363 397.927 99.7416 389.587C104.998 241.714 238.414 104.136 381.717 111.372C389.403 112.301 396.925 113.907 404.08 116.245Z" fill="url(#paint0_radial_2201_2)"/>
+				<path d="M99.1624 408.846C106.896 411.358 114.949 413.103 123.123 414.161C272.993 423.932 412.004 287.676 417.404 134.819C417.79 126.26 417.817 118.044 417.484 109.453C417.388 106.935 416.293 104.577 414.411 102.901C412.531 101.225 410.018 100.368 407.453 100.516C404.888 100.664 402.49 101.805 400.815 103.686C399.138 105.567 398.321 108.035 398.516 110.547C398.516 110.547 398.516 110.547 398.516 110.547C399.135 118.586 399.416 126.288 399.36 134.331C400.474 277.08 272.366 417.111 123.227 413.216C115.071 412.48 106.988 411.055 99.1624 408.846Z" fill="url(#paint1_radial_2201_2)"/>
+				<g>
+					<path d="M103.928 408.073C19.9402 324.085 19.9402 187.915 103.928 103.928C187.915 19.9402 324.085 19.9402 408.073 103.928C492.06 187.915 492.06 324.085 408.073 408.073C324.085 492.06 187.915 492.06 103.928 408.073Z" fill="url(#paint2_radial_2201_2)"/>
+					<path d="M103.928 408.073C88.2106 391.891 75.1096 373.321 65.253 353.184C24.6206 272.487 43.1622 168.414 107.5 107.5C107.5 107.5 107.5 107.5 107.5 107.5C186.009 27.4713 326.523 30.3558 402.145 109.855C402.145 109.855 402.145 109.855 402.145 109.855C481.644 185.477 484.529 325.992 404.5 404.5C404.5 404.5 404.5 404.5 404.5 404.5C343.587 468.838 239.513 487.379 158.816 446.747C138.679 436.89 120.109 423.79 103.928 408.073C119.632 424.265 137.857 438.014 157.868 448.607C237.817 492.255 346.03 477.631 411.645 411.645C411.645 411.645 411.645 411.645 411.645 411.645C497.562 332.087 500.446 180.445 414 98.0001C414 98.0001 414 98.0001 414 98.0001C331.555 11.5538 179.914 14.4382 100.355 100.355C100.355 100.355 100.355 100.355 100.355 100.355C34.3689 165.97 19.7457 274.183 63.3934 354.132C73.9857 374.143 87.7354 392.368 103.928 408.073Z" fill="url(#paint3_radial_2201_2)"/>
+				</g>
+				<path id="orbit1" d="M125.416 69.9163C111.094 64.3231 102.151 60.7304 87.4102 57.0208C72.6134 53.7792 51.72 48.5489 36.7302 62.6481C18.8017 90.398 36.6192 116.273 46.3775 139.369C57.5728 161.675 72.0561 184.03 86.4772 204.37C116.191 245.999 149.351 284.658 184.896 320.9C226.549 363.067 270.827 402.557 319.88 436.536C344.044 452.913 370.322 469.389 399.312 478.718C405.672 480.702 415.02 482.84 421.994 482.957C430.769 483.223 438.783 481.822 445.845 476.181C459.186 464.827 457.963 445.292 456.384 432.591C454.256 417.183 451.442 408.325 446.761 393.59C450.092 408.674 451.579 417.833 452.407 432.918C452.888 445.451 451.069 463.435 441.007 469.839C430.7 476.633 416.04 472.859 403.057 467.917C377.072 457.449 352.36 440.05 329.689 422.962C283.514 387.578 240.874 347.693 199.87 306.176C164.877 270.5 130.823 233.736 99.7089 194.461C84.5849 175.303 69.2948 154.246 57.3467 133.487C46.0319 112.478 31.2448 86.2976 43.0167 68.3185C51.5989 58.23 71.8899 59.2143 86.6244 61.119C101.304 63.3614 110.699 65.4933 125.416 69.9163Z" fill="url(#paint4_radial_2201_2)"/>
+				<path id="orbit2" d="M125.416 69.9163C111.094 64.3231 102.151 60.7304 87.4102 57.0208C72.6134 53.7792 51.72 48.5489 36.7302 62.6481C18.8017 90.398 36.6192 116.273 46.3775 139.369C57.5728 161.675 72.0561 184.03 86.4772 204.37C116.191 245.999 149.351 284.658 184.896 320.9C226.549 363.067 270.827 402.557 319.88 436.536C344.044 452.913 370.322 469.389 399.312 478.718C405.672 480.702 415.02 482.84 421.994 482.957C430.769 483.223 438.783 481.822 445.845 476.181C459.186 464.827 457.963 445.292 456.384 432.591C454.256 417.183 451.442 408.325 446.761 393.59C450.092 408.674 451.579 417.833 452.407 432.918C452.888 445.451 451.069 463.435 441.007 469.839C430.7 476.633 416.04 472.859 403.057 467.917C377.072 457.449 352.36 440.05 329.689 422.962C283.514 387.578 240.874 347.693 199.87 306.176C164.877 270.5 130.823 233.736 99.7089 194.461C84.5849 175.303 69.2948 154.246 57.3467 133.487C46.0319 112.478 31.2448 86.2976 43.0167 68.3185C51.5989 58.23 71.8899 59.2143 86.6244 61.119C101.304 63.3614 110.699 65.4933 125.416 69.9163Z" fill="url(#paint4_radial_2201_2)"/>
+			</g>
+			<defs>
+				<radialGradient id="paint0_radial_2201_2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(411 99) rotate(134.54) scale(440.542 433.494)">
+					<stop offset="0.139423" stop-color="hsl(255, 100%, 60%)"/>
+					<stop offset="0.730769" stop-color="hsl(255, 100%, 60%)" stop-opacity="0.1"/>
+					<stop offset="0.817308" stop-color="hsl(255, 100%, 60%)" stop-opacity="0.05"/>
+					<stop offset="0.947115" stop-color="hsl(255, 100%, 60%)" stop-opacity="0"/>
+				</radialGradient>
+				<radialGradient id="paint1_radial_2201_2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(95.0005 417) rotate(-45.4598) scale(440.542 433.494)">
+					<stop offset="0.0528846" stop-color="hsl(255, 100%, 60%)" stop-opacity="0"/>
+					<stop offset="0.182692" stop-color="hsl(255, 100%, 60%)" stop-opacity="0.05"/>
+					<stop offset="0.269231" stop-color="hsl(255, 100%, 60%)" stop-opacity="0.1"/>
+					<stop offset="0.860577" stop-color="hsl(255, 100%, 60%)"/>
+				</radialGradient>
+				<radialGradient id="paint2_radial_2201_2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(408 107) rotate(134.136) scale(422.191)">
+					<stop stop-color="hsl(255, 100%, 60%)" stop-opacity="0.3"/>
+					<stop offset="0.730769" stop-color="hsl(255, 100%, 60%)" stop-opacity="0"/>
+				</radialGradient>
+				<radialGradient id="paint3_radial_2201_2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(411 99) rotate(134.54) scale(440.542 433.494)">
+					<stop offset="0.139423" stop-color="hsl(255, 100%, 60%)"/>
+					<stop offset="0.730769" stop-color="hsl(255, 100%, 60%)" stop-opacity="0.1"/>
+					<stop offset="0.817308" stop-color="hsl(255, 100%, 60%)" stop-opacity="0.05"/>
+					<stop offset="0.947115" stop-color="hsl(255, 100%, 60%)" stop-opacity="0"/>
+				</radialGradient>
+				<radialGradient id="paint4_radial_2201_2" cx="0" cy="0" r="1" gradientTransform="matrix(462.853 -460.69 462.853 465.555 14.3439 503.664)" gradientUnits="userSpaceOnUse">
+					<stop offset="0.365385" stop-color="hsl(255, 100%, 60%)"/>
+					<stop offset="0.625" stop-color="hsl(255, 100%, 60%)" stop-opacity="0.5"/>
+					<stop offset="0.716346" stop-color="hsl(255, 100%, 60%)" stop-opacity="0"/>
+				</radialGradient>
+			</defs>
+		</svg>
+		<div class="flex f-c f-col gap-2">
+			<div>
+				<h3>• Feel what you thought you'd lost</h3>
+				<p class="i">Find and re-experience little moments from your childhood</p>
+			</div>
+			<div>
+				<h3>• Discover flavors of the heart previously unknown</h3>
+				<p class="i">Experiment with exotic emotions you've yet to feel</p>
+			</div>
+			<div>
+				<h3>• Take home something you can't name</h3>
+				<p class="i">Special and specific emotions difficult to put to words</p>
+			</div>
+		</div>
+	</section>
+	<section id="featured">
+		<h2>Featured Offerings</h2>
+		<br>
+		<div class="wmax mia grid g-ar gap-2">
+			@each(affect in affects)
+				@!productcard({ affect, lister: listers.get(affect.lister) })
+			@end
+		</div>
+	</section>
+	<section id="about-teaser" class="flex f-c">
+		<div class="flex f-c f-col">
+			<h2>Who We Are</h2>
+			<br>
+			<p>Nöos Corps pioneers the frontier of affective commerce. We transform thought into tangible value.</p>
+			<br>
+			@button()
+				<a href="/about">Learn More</a>
+			@end
+		</div>
+	</section>
+@end

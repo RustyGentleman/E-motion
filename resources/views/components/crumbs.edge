@@ -1,0 +1,5 @@
+<div class="crumbs">
+	@each(page in pages)
+		/ <a{{ page.href? ` href=${page.href}` : '' }}>{{ page.title }}</a>
+	@end
+</div>

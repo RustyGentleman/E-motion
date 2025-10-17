@@ -1,0 +1,48 @@
+@pushOnceTo('css')
+	<style>
+		#activity {
+			display: grid;
+			grid-template-columns: auto 1fr;
+		}
+	</style>
+@end
+<div>
+	@!timestamp({ date: activity.createdAt })
+</div>
+<div>
+	@if(user)
+		<a href="{{ route('profile.show', [user.username]) }}">{{ '@' + user.username }}</a>
+	@end
+
+	{{-- {{ activity.type === 0? 'joined the platform' : activity.type === 1? 'listed' : activity.type === 3? 'updated' : activity.type === 4? 'delisted' : 'did something (undefined type)' }} --}}
+	@if(activity.type === 0)
+		joined the platform.
+	@elseif(activity.type === 1)
+		listed
+	@elseif(activity.type === 3)
+		updated
+	@elseif(activity.type === 4)
+		delisted
+	@elseif(activity.type === 5)
+		@if(activity.extras?.username)
+			updated their profile and changed their username from <span class="b i">{{ activity.extras.username.old }}</span> to <span class="b i">{{ activity.extras.username.new }}</span>.
+		@else
+			updated their profile.
+		@end
+	@elseif(activity.type === 6)
+		bought
+	@elseif(activity.type === 7)
+		relisted
+	@elseif(activity.type === 8)
+		set their avatar to
+	@else
+		did something (activity type {{ activity.type }} is not defined)
+	@end
+
+	@if(affect)
+		<a href="{{ route('affects.show', [affect.id]) }}">{{ affect.name }}</a>.
+	@elseif(activity.extras?.affect)
+		<a>{{ activity.extras.affect.name }}</a>.
+	@end
+</div>
+<div class="dh"></div>

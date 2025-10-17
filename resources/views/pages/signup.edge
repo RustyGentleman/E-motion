@@ -1,0 +1,20 @@
+@layout.app({ title: 'Signup', authUser })
+	@!crumbs({ pages: [
+		{ title: 'Signup' },
+	]})
+	@bordered({ class: ['flex', 'f-col', 'f-c', 'gap-1', 'w-fit', 'mia'] })
+		@form({ action: route('auth.postSignup'), class: ['flex', 'f-col', 'gap-1'] })
+			@!forminput({ type: 'text', label: 'Email', name: 'email' })
+			@!forminput({ type: 'text', label: 'Username', name: 'username', minlength: 3, maxlength: 64 })
+			@!forminput({ type: 'password', label: 'Password', name: 'password' })
+			@!forminput({ type: 'password', label: 'Confirm password', name: 'password-check' })
+			@button({ class: ['mia'], type: 'submit' })
+				Sign up
+			@end
+		@end
+		<p>
+			Already have an account?
+			<a href="{{ route('auth.login') }}">Log in</a>
+		</p>
+	@end
+@end

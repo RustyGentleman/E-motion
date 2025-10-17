@@ -1,0 +1,139 @@
+@layout.app({ title: '@' + user.username, user, authUser, listers, activityAffects })
+	@slot('meta')
+		<script>
+			window.addEventListener('load', () => {
+				const tabs = document.querySelector('.tabs')
+				window.addEventListener('scroll', () => {
+					if (tabs.getBoundingClientRect().top === 0)
+						tabs.classList.add('stuck')
+					else
+						tabs.classList.remove('stuck')
+				})
+				const edit_btn = document.getElementById('edit')
+				const edit_form = document.getElementById('editform')
+
+				if (!edit_form)
+					return
+
+				const bio = document.querySelector('#info .social .bio')
+				const name = document.querySelector('#info .social .name')
+				const i_bio = edit_form.querySelector('textarea')
+				const i_name = edit_form.querySelector('input[name=username]')
+
+				edit_btn.addEventListener('click', toggleProfileEdit)
+				edit_btn.addEventListener('keydown', (e) => {
+					if (e.key !== 'Enter' || e.key !== ' ') return
+					toggleProfileEdit()
+				})
+
+				function toggleProfileEdit() {
+					bio.classList.toggle('dn')
+					name.classList.toggle('dn')
+					edit_btn.classList.toggle('dn')
+					edit_form.classList.toggle('dn')
+					if (!edit_form.classList.includes('dn'))
+						i_name.focus()
+				}
+			})
+		</script>
+		<style>
+			#inventory, #listings {
+				display: grid;
+				grid-template-columns: auto 1fr;
+				.filters-widget { top: 2.5rem }
+			}
+			.spin { width: 5rem; margin-inline: auto; }
+			#avatar {
+				height: 100% !important;
+				margin: -2rem;
+			}
+		</style>
+	@end
+	@!crumbs({ pages: [
+		{ title: 'User profile' },
+	]})
+
+	<div class="flex f-col gap-2">
+		@if(avatar)
+			<div class="flex gap-2 w100">
+			@!gensvg({ id: 'avatar', input: avatar.seed, categories: avatar.categories, size: 150 })
+		@end
+		@bordered({ class: ['f-g'] })
+			<div id="info" class="flex gap-1">
+				<div class="social f-g flex f-col gap-1">
+					<div class="name">
+						<h1>{{ user.username }}</h1>
+					</div>
+					<div class="bio i">
+						@if(user.bio)
+							"{{{ user.bio }}}"
+						@else
+							<span class="tp-2">No bio</span>
+						@end
+					</div>
+					@if(authUser)
+						@if(user.id === authUser.id || authUser.roles.includes('ADMIN'))
+							@form({ action: route('profile.update', [user.id]), class: ['flex', 'f-w', 'f-col', 'gap-1', 'dn'], id: 'editform' })
+								@!forminput({ name: 'username', label: 'Username', class: ['lh-1'], value: user.username })
+								@!formtextarea({ name: 'bio', label: 'Bio', value: user.bio })
+								@button({ type: 'submit' })
+									Save
+								@end
+							@end
+						@end
+					@end
+				</div>
+				@if(authUser)
+					@if(user.id === authUser.id || authUser.roles.includes('ADMIN'))
+						@button({ id: 'edit', class: ['h-fit'] })
+							Edit profile
+						@end
+					@end
+				@end
+				{{-- <div class="platform">
+					<div class="balance tar">
+						<div>Balance</div>
+						@!points({ value: user.points, class: ['fz-2'] })
+					</div>
+				</div> --}}
+			</div>
+			@if(avatar)
+				</div>
+			@end
+		@end
+		<div>
+			@tabs({ class: ['flex', 'f-w'], selected_classes: ['cut-bless', 'bs-1t1'] })
+				@slot('tabs')
+					<button class="tab pad-1 lh-1 cut-bless bs-1t1">Activity</button>
+					<button class="tab pad-1 lh-1">Inventory
+						<span class="ts-2">{{ user.inventory.length || 0 }}</span>
+					</button>
+					<button class="tab pad-1 lh-1">Listings
+						<span class="ts-2">{{ user.listings.length || 0 }}</span>
+					</button>
+				@end
+				<div id="activity" class="panel cut-tless pad-2 bs-1t1 bb gap-2">
+					@each(activity in user.activities)
+						@!activity({ user, activity, affect: activityAffects.get(activity.affect_id) })
+					@end
+				</div>
+				<div id="inventory" class="panel cut-tless pad-1 bb gap-2 dn">
+					@include('partials/affect_filters')
+					<div class="grid g-ar gap-1">
+						@each(affect in user.inventory)
+							@!productcard({ affect, lister: user, class: ['h100', 'bb'] })
+						@end
+					</div>
+				</div>
+				<div id="listings" class="panel cut-tless pad-1 bb gap-2 dn">
+					@include('partials/affect_filters')
+					<div class="grid g-ar gap-1">
+						@each(affect in user.listings)
+							@!productcard({ affect, lister: user, class: ['h100', 'bb'] })
+						@end
+					</div>
+				</div>
+			@end
+		</div>
+	</div>
+@end

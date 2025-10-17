@@ -1,0 +1,117 @@
+@pushOnceTo('js')
+	<script>
+		window.addEventListener('load', () => {
+			const filters = document.getElementById('filters')
+			for (const filters of document.querySelectorAll('.filters-widget')) {
+				const listings = filters.nextElementSibling.children
+				const cbs = Array.from(filters.querySelectorAll('input[name=categories]'))
+
+				//? Checkboxes
+				for (const cb of filters.querySelectorAll('input[name=categories]')) {
+					cb.addEventListener('input', function() {
+						setTimeout(() => select((listing => {
+							for (const checked of cbs.filter(e => e.checked))
+								if (!listing.dataset.categories.includes(checked.value))
+									return true
+							return false
+						})))
+					})
+				}
+
+				//? Search box
+				filters.querySelector('#searchbox').addEventListener('input', function() {
+					select((listing => !listing.querySelector('.name').textContent.match(new RegExp(this.value.replaceAll(/\s/g, '\s+'), 'i')) && !listing.querySelector('.description').textContent.match(new RegExp(this.value.replaceAll(/\s/g, '\s+'), 'i'))))
+				})
+
+
+				function select(cond) {
+					for (const listing of listings) {
+						listing.classList.remove('not-search')
+						if (cond(listing))
+							listing.classList.add('not-search')
+					}
+				}
+				filters.querySelector('#searchbox').dispatchEvent(new Event('input'))
+				cbs[0].dispatchEvent(new Event('input'))
+			}
+		})
+	</script>
+@end
+@pushOnceTo('css')
+<style>
+	#searchbox { min-width: 25ch }
+</style>
+@end
+
+<div class="filters-widget wmin flex f-col gap-1 pad-1 cut-border bt-1 h-fit sticky">
+	<input type="text" name="search" id="searchbox" class="cut-border" placeholder="Search term...">
+	<div class="dh"></div>
+	<div>
+		<div>Effect categories</div>
+		<div class="flex f-w gap-1">
+			@checkboxtext({ class: ['f-g', 'tac'], name: 'categories', value: 'positive' })
+				<span>Positive</span>
+			@end
+			@checkboxtext({ class: ['f-g', 'tac'], name: 'categories', value: 'negative' })
+				<span>Negative</span>
+			@end
+			@checkboxtext({ class: ['f-g', 'tac'], name: 'categories', value: 'ambiguous' })
+				<span>Ambiguous</span>
+			@end
+			@checkboxtext({ class: ['f-g', 'tac'], name: 'categories', value: 'other' })
+				<span>Other</span>
+			@end
+		</div>
+	</div>
+	<div class="dh"></div>
+	<div>
+		<div>Type categories</div>
+		<div class="flex f-w gap-1">
+			@checkboxtext({ class: ['f-g', 'tac'], name: 'categories', value: 'social' })
+				<span>Social</span>
+			@end
+			@checkboxtext({ class: ['f-g', 'tac'], name: 'categories', value: 'introspective' })
+				<span>Introspective</span>
+			@end
+			@checkboxtext({ class: ['f-g', 'tac'], name: 'categories', value: 'cognitive' })
+				<span>Cognitive</span>
+			@end
+			@checkboxtext({ class: ['f-g', 'tac'], name: 'categories', value: 'environmental' })
+				<span>Environmental</span>
+			@end
+			@checkboxtext({ class: ['f-g', 'tac'], name: 'categories', value: 'temporal' })
+				<span>Temporal</span>
+			@end
+			@checkboxtext({ class: ['f-g', 'tac'], name: 'categories', value: 'instinctual' })
+				<span>Instinctual</span>
+			@end
+			@checkboxtext({ class: ['f-g', 'tac'], name: 'categories', value: 'existential' })
+				<span>Existential</span>
+			@end
+		</div>
+	</div>
+	<div class="dh"></div>
+	<div>
+		<div>Meta categories</div>
+		<div class="flex f-w gap-1">
+			@checkboxtext({ class: ['f-g', 'tac'], name: 'categories', value: 'common' })
+				<span>Common</span>
+			@end
+			@checkboxtext({ class: ['f-g', 'tac'], name: 'categories', value: 'rare' })
+				<span>Rare</span>
+			@end
+			@checkboxtext({ class: ['f-g', 'tac'], name: 'categories', value: 'exotic' })
+				<span>Exotic</span>
+			@end
+			@checkboxtext({ class: ['f-g', 'tac'], name: 'categories', value: 'ephemeral' })
+				<span>Ephemeral</span>
+			@end
+			@checkboxtext({ class: ['f-g', 'tac'], name: 'categories', value: 'lingering' })
+				<span>Lingering</span>
+			@end
+			@checkboxtext({ class: ['f-g', 'tac'], name: 'categories', value: 'fragile' })
+				<span>Fragile</span>
+			@end
+		</div>
+	</div>
+</div>

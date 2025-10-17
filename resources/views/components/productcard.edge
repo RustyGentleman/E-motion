@@ -1,0 +1,51 @@
+@pushOnceTo('css')
+	<style>
+		#inventory, #listings {
+			.grid {
+				--col-min: 25ch;
+				--row: max-content;
+			}
+		}
+		.affect {
+			transition: all .3s ease;
+			&:hover {
+				background-color: var(--bs-1t2);
+			}
+			.affect-svg { aspect-ratio: 1; margin: -2rem }
+			.name {
+				font-size: 1.5rem;
+				font-weight: bold;
+				margin-bottom: 0.5rem;
+			}
+			.points {
+				font-size: 1.5rem;
+				float: right;
+			}
+			&.not-search { display: none }
+		}
+	</style>
+@end
+<div {{ $props.only(['class']).merge({ class: ['affect', 'pad-1', 'bt-1', 'cut-border', 'flex', 'f-col', 'f-ch', 'tac'] }).toAttrs() }} data-categories="{{ affect.categories?.join(' ') }}">
+	@!gensvg({ input: `${affect.id}-${affect.name}-${affect.description}`.padEnd(256, '-').slice(0, 256), affect, size: 256, class: ['w100', 'bb'] })
+	<a href="{{ route('affects.show', [affect.id]) }}">
+		<div class="name tac">{{ affect.name }}</div>
+	</a>
+	<div class="lister tp-2 tac">by <a href="{{ route('profile.show', [lister.username]) }}">{{ '@' + lister.username }}</a></div>
+	<div class="flex f-col f-sb gap-1 f-g">
+		@let(desc = affect.description.match(/^[\s\S]{3,150}\S*/)[0])
+		<div class="description flex f-c">{{ affect.description.length === desc.length? desc : desc + '...' }}</div>
+		<div class="flex f-w f-c gap-1" style="justify-content: end;">
+			@!points({ value: affect.price })
+			@if(authUser && !(authUser.cart.find(a => a.id === affect.id) || authUser.inventory.find(a => a.id === affect.id)))
+				@form({ action: route('cart.add', [affect.id]) })
+					@button({ type: 'submit' })
+						+
+					@end
+				@end
+			@end
+			@button()
+				<a href="{{ route('affects.show', [affect.id]) }}">View</a>
+			@end
+		</div>
+	</div>
+</div>

@@ -1,0 +1,20 @@
+@layout.app({ title: 'Product Catalog', class: [], authUser, listers })
+	@slot('meta')
+		<style>
+			.wrapper {
+				display: grid;
+				grid-template-columns: auto 1fr;
+			}
+		</style>
+	@endslot
+
+	@!crumbs({ pages: [{ title: 'Catalog' }] })
+	<div class="wrapper gap-2 w100">
+		@include('partials/affect_filters')
+		<div id="listings" class="w100 grid g-ar gap-1">
+			@each(affect in affects)
+				@!productcard({ affect, lister: listers.get(affect.lister) , authUser, class: ['h100', 'bb'] })
+			@end
+		</div>
+	</div>
+@end

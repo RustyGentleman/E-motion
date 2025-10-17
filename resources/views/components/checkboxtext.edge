@@ -1,0 +1,5 @@
+<label for="{{ value }}" {{ $props.only(['class', 'id', 'title']).merge({ class: ['i-cboxt', 'cut-border'] }).toAttrs() }} tabindex="0">
+	{{{ await $slots.main() }}}
+	<br>
+	<input type="checkbox" id="{{ value }}" name="{{ name }}" value="{{ value }}" {{ $props.except(['class', 'type', 'id', 'title', 'checked']).merge({ class: ['dn'] }).toAttrs() }}{{ checked? ' checked' : '' }}>
+</label>

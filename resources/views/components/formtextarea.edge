@@ -1,0 +1,18 @@
+<div class="flex f-col">
+	@if(hint)
+		<div class="flex f-sb">
+			<span>{{ label }}:</span>
+			@!hint({ text: hint })
+		</div>
+	@else
+		<div>
+			<span>{{ label }}:</span>
+		</div>
+	@end
+	<textarea id="{{ name }}" name="{{ name }}" {{ $props.except(['name', 'type']).toAttrs() }} class="cut-border"{{ (required?? true)? ' required' : '' }}>{{ (keep?? true)? old(name) || $props.get('value') || '' : $props.get('value') || '' }}</textarea>
+	@inputError(name)
+		@each(message in $messages)
+			<p class="form-error">* {{ message }}</p>
+		@end
+	@end
+</div>

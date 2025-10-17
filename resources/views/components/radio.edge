@@ -1,0 +1,4 @@
+<label for="{{ value }}" {{ $props.only(['class', 'id']).merge({ class: ['i-rad', 'cut-border', 'flex', 'f-c'] }).toAttrs() }}>
+	{{{ await $slots.main() }}}
+	<input type="radio" id="{{ value }}" name="{{ name }}" value="{{ value }}" {{ $props.except(['class', 'type', 'id']).toAttrs() }}>
+</label>

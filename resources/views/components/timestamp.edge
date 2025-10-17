@@ -1,0 +1,11 @@
+<span title="{{ date.toLocaleString({ month: 'long', day: '2-digit', hour: '2-digit', minute: '2-digit' }) }}">
+	@if(date.day / 10 == 1 && date.day % 10 === 1)~
+		{{ date.toLocaleString({ month: 'short', day: '2-digit' }) }}st
+	@elseif(date.day / 10 == 1 && date.day % 10 === 2)
+		{{ date.toLocaleString({ month: 'short', day: '2-digit' }) }}nd
+	@elseif(date.day / 10 == 1 && date.day % 10 === 3)
+		{{ date.toLocaleString({ month: 'short', day: '2-digit' }) }}rd
+	@else
+		{{ date.toLocaleString({ month: 'short', day: '2-digit' }) }}th
+	@end
+</span>

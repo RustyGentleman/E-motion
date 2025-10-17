@@ -1,0 +1,18 @@
+<div class="flex f-col">
+	@if(hint)
+		<div class="flex f-sb">
+			<span>{{ label }}:</span>
+			@!hint({ text: hint })
+		</div>
+	@else
+		<div>
+			<span>{{ label }}:</span>
+		</div>
+	@end
+	<input type="{{ type || 'text' }}" id="{{ name }}" name="{{ name }}" {{ $props.except(['name', 'type', 'value']).merge({ class: ['cut-border'] }).toAttrs() }} value="{{ (keep?? true)? old(name) || $props.get('value') || '' : $props.get('value') || '' }}"{{ (required?? true)? ' required' : '' }}/>
+	@inputError(name)
+		@each(message in $messages)
+			<p class="form-error">* {{ message }}</p>
+		@end
+	@end
+</div>

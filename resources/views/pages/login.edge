@@ -1,0 +1,39 @@
+@layout.app({ title: 'Login', authUser })
+	@!crumbs({ pages: [
+		{ title: 'Login' },
+	]})
+	@bordered({ class: ['flex', 'f-col', 'f-c', 'gap-1', 'w-fit', 'mia'] })
+		@form({ action: route('auth.postLogin'), class: ['flex', 'f-col', 'gap-1'] })
+			<div>
+				@!forminput({ type: 'email', label: 'Email', name: 'email' })
+				@inputError('email')
+					@each(message in $messages)
+						<p class="form-error">* {{ message }}</p>
+					@end
+				@end
+			</div>
+			<div>
+				@!forminput({ type: 'password', label: 'Password', name: 'password' })
+				@inputError('password')
+					@each(message in $messages)
+						<p class="form-error">* {{ message }}</p>
+					@end
+				@end
+			</div>
+			@flashMessage('invalid_credentials')
+				<p class="form-error">* {{ $message.message }}</p>
+			@end
+
+			@button({ type: 'submit', class: ['mia'] })
+				Log in
+			@end
+		@end
+		<p>
+			Don't have an account?
+			<a href="{{ route('auth.signup') }}">Sign up</a>
+		</p>
+		@flashMessage('notification')
+			{{ $message.message }}
+		@end
+	@end
+@end

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>
+		{{ title || 'Home' }} - E-motion
+	</title>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+	@if ($slots.meta)
+		{{{ await $slots.meta() }}}
+	@endif
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Grenze:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+	<script>
+		window.catchFormSubmit = function(form, jsCallback) {
+			const submitButton = form?.querySelector('button[type="submit"]')
+
+			form?.addEventListener('submit', async (event) => {
+				event.preventDefault()
+
+				const formData = new FormData(form)
+
+				submitButton.disabled = true
+
+				try {
+					const response = await fetch(form.action, {
+						method: form.method,
+						body: formData,
+						headers: { 'X-Requested-With': 'XMLHttpRequest' },
+					})
+
+
+					if (response.redirected) {
+						window.location.href = response.url
+						return
+					}
+
+					if (response.headers.get('content-type')?.includes('application/json')) {
+						const data = await response.json()
+						if (jsCallback)
+							jsCallback(data)
+						submitButton.disabled = false
+						return
+					}
+
+					const text = await response.text()
+					console.log('Server response:', text)
+
+				} catch (err) {
+					console.error('Submission error', err)
+				} finally {
+					submitButton.disabled = false
+				}
+			})
+		}
+	</script>
+
+	@vite(['resources/css/app.css', 'resources/js/app.js'])
+	@stack('dumper')
+
+	@stack('css')
+	@stack('js')
+</head>
+<body>
+	@include('partials/header')
+	<main {{ $props.only(['class']).merge({ class: ['content', 'mia', 'pad-1'] }).toAttrs() }}>
+		{{{ await $slots.main() }}}
+	</main>
+	@include('partials/footer')
+	<div id="bg">
+		<canvas></canvas>
+		<svg image-rendering="optimizeSpeed">
+			<filter id="dither" color-interpolation-filters="sRGB" x="0" y="0" width="100%" height="100%">
+				<feImage width="4" height="4" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAA+UlEQVR42gXBERTCUABA0X/OYDAYDAZBEAyCIBgMgiAIgiAYBINgEAwGgyAIBsFgMAiCIAiCIAgGQTAYDAaDIAiCwWDwulcIIXg8HgwGA36/H4qi8Hq9sCyLtm0Rm82G0WjE5XJhvV4ThiHT6ZT7/U4QBIhut0tVVaiqSpZl9Pt9vt8vnU6HsiwRh8OB5XLJfr9nNptxPp9xXZckSbBtGyHLMs/nE9M0aZoGSZJI05ThcEhd14jdbsdkMuF2u+H7PtvtlvF4zPV6xfM8hGEYfD4fdF2nKAp6vR7v9xtN08jzHHE6nVitVsRxzGKx4Hg84jgOURQxn8/5A7oKnYRU4EpfAAAAAElFTkSuQmCC"/>
+				<feTile/>
+				<feComposite operator="arithmetic" k1="0" k2="1" k3="1" k4="-0.5" in="SourceGraphic"/>
+				<feComponentTransfer>
+					<feFuncR type="discrete" tableValues="0 1"/>
+					<feFuncG type="discrete" tableValues="0 1"/>
+					<feFuncB type="discrete" tableValues="0 1"/>
+				</feComponentTransfer>
+			</filter>
+		</svg>
+	</div>
+</body>
+</html>

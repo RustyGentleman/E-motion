@@ -1,0 +1,6 @@
+<button form="{{ formID }}" {{ $props.merge({ class: ['btn', 'cut-border'] }).toAttrs() }}>
+	{{{ await $slots.main() }}}
+</button>
+@form({ class: ['dn'], action, method, id: formID  })
+	{{ await $slots.form() }}
+@end

@@ -1,0 +1,103 @@
+@if(authUser)
+	@pushOnceTo('css')
+		<style>
+			#cart-btn {
+				position: relative;
+				z-index: 10;
+				cursor: pointer;
+			}
+			#cart-panel {
+				position: absolute;
+				top: calc(100% + .5rem);
+				right: -1rem;
+				z-index: inherit;
+				.grid {
+					grid-template-columns: auto 1fr auto auto;
+					.dh, .total, .buy { grid-column: span 4 }
+				}
+				a.pad-1 { padding-block: 0 }
+				.affect-svg { margin: -1rem; margin-right: 0 }
+			}
+		</style>
+	@end
+	@pushOnceTo('js')
+		<script>
+			window.addEventListener('load', () => {
+				const btn = document.getElementById('cart-btn')
+				const panel = document.getElementById('cart-panel')
+
+				btn.addEventListener('click', () => panel.classList.toggle('dn'))
+				btn.addEventListener('keydown', (e) => {
+					if (e.key === 'Enter' || e.key === ' ')
+						panel.classList.toggle('dn')
+				})
+				window.addEventListener('click', (e) => {
+					if (!e.target.closest('#cart-btn'))
+						panel.classList.add('dn')
+				})
+			})
+		</script>
+	@end
+@end
+
+<header>
+	<div class="content flex f-col mia pad-1">
+		<div class="logo">
+			<h1 class="ts-1">E-motion</h1>
+			<p class="i">Your <span class="ts-2">e</span>mporium of <span class="ts-2">e</span>xotic <span class="ts-2">e</span>motions.</p>
+		</div>
+		<nav class="flex gap-2 f-sb">
+			<div class="flex gap-2">
+				<a href="/">Home</a>
+				<a href="{{ route('affects.catalog') }}">Catalog</a>
+			</div>
+			<div class="flex f-w gap-2">
+				@if(authUser)
+					<div id="cart-btn" class="fit" role="button" tabindex="0">
+						Cart
+						<span class="ts-2">{{ authUser.cart.length || 0 }}</span>
+						<div id="cart-panel" class="cut-border pad-2 wmax flex f-col frost dn">
+							@if(authUser.cart.length > 0)
+								<div class="grid f-sb f-ch gap-1">
+									@each(affect in authUser.cart)
+										@!gensvg({ input: `${affect.id}-${affect.name}-${affect.description}`.padEnd(256, '-').slice(0, 256), affect, size: 64, class: ['pad-0'] })
+										<a class="tal" href="{{ route('affects.show', [affect.id]) }}">{{ affect.name }}</a>
+										@!points({ value: affect.price })
+										@form({ action: route('cart.remove', [affect.id]) })
+											@button({ type: 'submit', class: ['lh-1'] })
+												x
+											@end
+										@end
+									@end
+									<div class="dh"></div>
+									<div class="total flex f-sb gap-1">
+										<span>Total:</span>
+										@!points({ value: authUser.cart.reduce((prev, cur) => prev + cur.price, 0) })
+									</div>
+									@form({ action: route('cart.buy') })
+										@if(authUser.points < authUser.cart.reduce((prev, cur) => prev + cur.price, 0))
+											@button({ type: 'submit', class: ['lh-1'] })
+												Buy
+											@end
+										@else
+											@button({ type: 'submit', disabled: true, class: ['lh-1'] })
+												Buy
+											@end
+										@end
+									@end
+								</div>
+							@else
+								<span>Nothing yet.</span>
+							@end
+						</div>
+					</div>
+					@!points({ value: authUser.points })
+					<a href="{{ route('profile.show', { username: authUser.username }) }}" class="c-inh">{{ '@'+authUser.username }}</a>
+					<a class="btn cut-border lh-1" href="{{ route('auth.logout') }}">Log out</a>
+				@else
+					<a href="{{ route('auth.login')}}">Log in</a>
+				@end
+			</div>
+		</nav>
+	</div>
+</header>

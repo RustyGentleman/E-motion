@@ -1,0 +1,55 @@
+@pushOnceTo('js')
+	<script>
+		window.addEventListener('load', () => {
+			const tabgroups = Array.from(document.querySelectorAll('.tabs'))
+			for (const group of tabgroups) {
+				const tabs = Array.from(group.querySelectorAll('.tab:not(.end)'))
+				const panels = Array.from(group.nextElementSibling.children)
+				for (const [i, tab] of tabs.entries()) {
+					tab.addEventListener('click', () => selectTab(i, tab))
+					tab.addEventListener('keydown', (e) => {
+						if (e.key === 'Enter' || e.key === ' ')
+							selectTab(i, tab)
+					})
+				}
+				function selectTab(index, tab) {
+					const panel = panels.at(index)
+					const selectedClasses = '{{{ selected_classes || `selected` }}}'.split(',')
+
+					Array.from(group.children).forEach(e => {
+						for (const c of selectedClasses)
+							e.classList.remove(c);
+					})
+					for (const c of selectedClasses)
+						tab?.classList.add(c);
+
+					panels.forEach(e => e.classList.add('dn'))
+					panels.at(index)?.classList.remove('dn')
+				}
+			}
+		})
+	</script>
+@end
+@pushOnceTo('css')
+	<style>
+		.tabs {
+			position: sticky;
+			top: 0;
+			z-index: 1;
+			transition: background .1s ease;
+			&.stuck { background-color: var(--bp-1); }
+			.tab {
+				word-spacing: .3rem;
+				&:not(.cut-bless) { border-bottom: solid 1px var(--ts-1) }
+			}
+		}
+	</style>
+@end
+
+<div {{ $props.only(['class']).merge({ class: ['tabs'] }).toAttrs() }}>
+	{{{ await $slots.tabs() }}}
+	<div class="tab end f-g"></div>
+</div>
+<div class="tab-panels">
+	{{{ await $slots.main() }}}
+</div>

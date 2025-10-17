@@ -1,0 +1,13 @@
+@pushOnceTo('css')
+	<style>
+		.points {
+			color: var(--ts-2);
+			text-wrap-mode: nowrap;
+			span {
+				display: inline-block;
+				transform: translateY(.15em);
+			}
+		}
+	</style>
+@end
+<span {{ $props.merge({ class: ['points'] }).toAttrs() }}>{{ value }} <span>¤</span></span>

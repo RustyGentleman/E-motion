@@ -1,0 +1,210 @@
+@layout.app({ title: existing? 'Edit Affect' : 'List Affect', class: ['f-c'], authUser })
+	@pushOnceTo('css')
+		<style>
+			.crumbs + div { grid-template-columns: auto auto }
+			#pricing-guidelines {
+				> p:first-of-type {
+				}
+				.grid {
+					grid-template-columns: auto auto auto;
+					gap: 0 .5rem;
+					padding-left: 1rem;
+				}
+			}
+			input[type=text] { min-width: 50ch }
+			textarea { height: calc(1rem + 5lh) }
+		</style>
+	@end
+
+	@!crumbs({ pages: [
+		{ title: 'Catalog', href: route('affects.catalog') },
+		{ title: existing? 'Edit Affect' : 'List Affect' },
+	]})
+	<div class="grid gap-4 w-fit mia">
+		@bordered()
+			@form({ action: existing? route('affects.update', [existing.id]) : route('affects.store'), class: ['flex', 'f-col', 'gap-1'] })
+				<div class="w100">
+					@!forminput({ label: 'Name',
+						type: 'text',
+						name: 'name',
+						minlength: 3,
+						maxlength: 128, hint: 'Required.\nThe name of the Affect to be listed Must be between 3 and 128 characters long.',
+						value: existing?.name?? undefined
+					})
+				</div>
+				<div class="w100">
+					@!forminput({ label: 'Alternative names',
+						type: 'text',
+						name: 'alt_names',
+						maxlength: 512,
+						hint: 'Optional. Comma-separated. Each must be between 3 and 128 characters long.\nDisplayed on product page.',
+						required: false,
+						value: existing?.alt_names?? undefined
+					})
+				</div>
+				<div class="w100">
+					@!formtextarea({ label: 'Description',
+						name: 'description',
+						minlength: 3,
+						maxlength: 2048,
+						hint: 'Required. Must be between 3 and 2048 characters long.\nDescription of the Affect.',
+						value: existing?.description?? undefined
+					})
+				</div>
+				<div class="w100">
+					<div class="flex f-sb">Effect categories:
+						@!hint({ text: 'At least one is required. Select all that apply.\nThe effect the Affect is likely to have on the experiencer.' })
+					</div>
+					@flashMessage('type-category')
+						<p class="form-error">* {{ $message.message }}</p>
+					@end
+					<div class="flex f-col gap-1">
+						<div class="flex gap-1 f-samesize w100 tac">
+							@checkboxtext({ name: 'categories', value: 'positive', checked: existing?.categories.includes('positive') || false })
+								<span>Positive</span>
+							@end
+							@checkboxtext({ name: 'categories', value: 'negative', checked: existing?.categories.includes('negative') || false })
+								<span>Negative</span>
+							@end
+						</div>
+						<div class="flex gap-1 f-samesize w100 tac">
+							@checkboxtext({ name: 'categories', value: 'ambiguous', checked: existing?.categories.includes('ambiguous') || false })
+								<span>Ambiguous</span>
+							@end
+							@checkboxtext({ name: 'categories', value: 'other', checked: existing?.categories.includes('other') || false })
+								<span>Other</span>
+							@end
+						</div>
+					</div>
+				</div>
+				<div class="w100">
+					<div class="flex f-sb">Type categories:
+						@!hint({ text: 'At least one is required. Select all that apply.\nThe type and nature of the Affect.' })
+					</div>
+					@flashMessage('type-category')
+						<p class="form-error">* {{ $message.message }}</p>
+					@end
+					<div class="flex f-col gap-1">
+						<div class="flex gap-1 f-samesize w100 tac">
+							@checkboxtext({ name: 'categories', value: 'social', title: 'Of a nature relating to other people and/or pets.', checked: existing?.categories.includes('social') || false })
+								<span>Social</span>
+							@end
+							@checkboxtext({ name: 'categories', value: 'introspective', title: 'Of a nature relating to the self.', checked: existing?.categories.includes('introspective') || false })
+								<span>Introspective</span>
+							@end
+							@checkboxtext({ name: 'categories', value: 'cognitive', title: 'Of a nature relating to thoughts and other cognitive processes.', checked: existing?.categories.includes('cognitive') || false })
+								<span>Cognitive</span>
+							@end
+						</div>
+						<div class="flex gap-1 f-samesize w100 tac">
+							@checkboxtext({ name: 'categories', value: 'environmental', title: 'Of a nature relating to the surrounding physical environment.', checked: existing?.categories.includes('environmental') || false })
+								<span>Environmental</span>
+							@end
+							@checkboxtext({ name: 'categories', value: 'temporal', title: 'Of a nature relating to time, be it a specific moment or span of time, or its passage.', checked: existing?.categories.includes('temporal') || false })
+								<span>Temporal</span>
+							@end
+						</div>
+						<div class="flex gap-1 f-samesize w100 tac">
+							@checkboxtext({ name: 'categories', value: 'instinctual', title: "Of a nature relating to the instincts.", checked: existing?.categories.includes('instinctual') || false })
+								<span>Instinctual</span>
+							@end
+							@checkboxtext({ name: 'categories', value: 'existential', title: 'Of a nature relating to existence.', checked: existing?.categories.includes('existential') || false })
+								<span>Existential</span>
+							@end
+						</div>
+					</div>
+				</div>
+				<div class="w100">
+					<div class="flex f-sb">Meta categories:
+						@!hint({ text: 'Select all that apply.\nCharacteristics relating to the Affect itself.' })
+					</div>
+					<div class="flex f-col gap-1">
+						<div class="flex gap-1 f-samesize w100 tac">
+							@checkboxtext({ name: 'categories', value: 'common', title: 'Commonly experienced organically', checked: existing?.categories.includes('common') || false })
+								<span>Common</span>
+							@end
+							@checkboxtext({ name: 'categories', value: 'rare', title: 'Rarely experienced organically.', checked: existing?.categories.includes('rare') || false })
+								<span>Rare</span>
+							@end
+							@checkboxtext({ name: 'categories', value: 'exotic', title: 'Very rarely experienced organically, and/or only done so once-in-a-lifetime.', checked: existing?.categories.includes('exotic') || false })
+								<span>Exotic</span>
+							@end
+						</div>
+						<div class="flex gap-1 f-samesize w100 tac">
+							@checkboxtext({ name: 'categories', value: 'ephemeral', title: 'Lasting only briefly.', checked: existing?.categories.includes('ephemeral') || false })
+								<span>Ephemeral</span>
+							@end
+							@checkboxtext({ name: 'categories', value: 'lingering', title: 'Lasting for a significant time, from hours to days.', checked: existing?.categories.includes('lingering') || false })
+								<span>Lingering</span>
+							@end
+							@checkboxtext({ name: 'categories', value: 'fragile', title: 'Easy to disrupt, dissolve and/or otherwise lose.', checked: existing?.categories.includes('fragile') || false })
+								<span>Fragile</span>
+							@end
+						</div>
+					</div>
+				</div>
+				<div class="flex f-w f-c f-sb gap-2" style="align-items: end">
+					<div class="w-fit">
+						@!forminput({ label: 'Price',
+							type: 'number',
+							name: 'price',
+							min: 0,
+							max: 10000,
+							step: 0.01,
+							hint: 'Required. Must be at most 10.000.\nConsult pricing guidelines.',
+							value: existing?.price?? undefined
+						})
+					</div>
+					@button({ type: 'submit' })
+						@if(existing)
+							Save changes
+						@else
+							List Affect
+						@end
+					@end
+				</div>
+			@end
+		@end
+		<div id="pricing-guidelines">
+			<h2>Pricing Guidelines</h2>
+			<br>
+			<p>When pricing your affect, consider the following aspects:</p>
+			<br>
+			<div class="w-fit">
+				<b>• Intensity:</b> how intense the sensation is.
+				<div style="padding-left:1rem">
+					<p>Noticeable</p>
+					<p class="i">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;base: ~<span class="points">50-100 ¤</span></p>
+					<p>Significant</p>
+					<p class="i">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;base: ~<span class="points">100-200 ¤</span></p>
+					<p>Intense</p>
+					<p class="i">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;base: ~<span class="points">200-300 ¤</span></p>
+				</div>
+			</div>
+			<br>
+			<div class="w-fit">
+				<b>• Rarity:</b> how commonly it's experienced naturally
+				<div style="padding-left:1rem">
+					<p>Common (every once in a while)</p>
+					<p class="i">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;no change</p>
+					<p>Rare (not often, maybe circumstantial)</p>
+					<p class="i">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ ~<span class="points">50 ¤</span></p>
+					<p>Exotic (hardly, maybe once in a lifetime)</p>
+					<p class="i">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ ~<span class="points">100-150 ¤</span></p>
+				</div>
+			</div>
+			<br>
+			<div class="w-it">
+				<b>• Duration and stability:</b> how enduring it is.
+				<div style="padding-left:1rem">
+					<p>Ephemeral (seconds to a few minutes)</p>
+					<p class="i">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- ~<span class="points">50 ¤</span></p>
+					<p>Lingering (hours or a couple days)</p>
+					<p class="i">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ ~<span class="points">50 ¤</span></p>
+					<p>Fragile (easy to lose or disrupt)</p>
+					<p class="i">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- ~<span class="points">100 ¤</span></p>
+				</div>
+			</div>
+		</div>
+	</div>
+@end

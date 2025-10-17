@@ -1,0 +1,198 @@
+@layout.app({ title: affect.name, class: [], authUser, affect, lister, class: ['grid', 'gap-2'] })
+	@slot('meta')
+		<style>
+			main {
+				grid-template-areas: 'meta info';
+				grid-template-columns: auto 1fr;
+			}
+			#meta {
+				clip-path: inset(-10rem -10rem -10rem -10rem);
+				position: sticky;
+				.affect-svg {
+					margin: -2rem;
+				}
+				.keywords div {
+					padding-inline: .5rem;
+					min-width: 1.5rem;
+				}
+			}
+			#info {
+				grid-area: info;
+				grid-template-areas: 'name buy' 'desc desc' 'ac ac';
+				grid-template-columns: 1fr auto;
+				grid-template-rows: auto 1fr;
+			}
+			#name {
+				grid-area: name;
+				justify-content: center;
+			}
+			#buy {
+				grid-area: buy;
+				justify-content: center;
+				.points { font-size: 2rem; }
+			}
+			#desc { grid-area: desc; }
+			#activity-comments { grid-area: ac; }
+			#comments {
+				.grid {
+					grid-template-columns: auto auto 1fr auto;
+					.dh { grid-column: span 4 }
+				}
+				.avatar {
+					margin-block: -1.2rem;
+					margin-inline: -.5rem
+				}
+			}
+		</style>
+		<meta name="csrf-token" content="{{ csrfToken }}">
+	@end
+
+	<div id="meta" class="cut-before bs-1t1 of-v flex f-col gap-1 w-fit h-fit pad-2 wmin">
+		@!gensvg({ input: `${affect.id}-${affect.name}-${affect.description}`.padEnd(256, '-').slice(0, 256), affect, size: 256 })
+		<div class="dh"></div>
+		@if(authUser && affect.lister === authUser.id)
+			<div class="flex f-w f-c tac gap-1">
+				@if(affect.delisted)
+					@form({ action: route('affects.relist', [affect.id]) })
+						@button({ type: 'submit' })
+							Relist
+						@end
+					@end
+				@else
+					@form({ action: route('affects.delist', [affect.id]) })
+						@button({ type: 'submit' })
+							Delist
+						@end
+					@end
+				@end
+				@button()
+					<a href="{{ route('affects.edit', [affect.id]) }}">Edit</a>
+				@end
+			</div>
+			<div class="dh"></div>
+		@end
+		<div class="flex f-col">
+			<div>Effect categories</div>
+			<div class="flex f-w tac gap-1">
+				@each(category in affect.categories.filter(e => ['positive', 'negative', 'ambiguous', 'other'].includes(e)))
+					<div class="cut-border bs-1t1 f-g">{{ category[0].toUpperCase() + category.slice(1) }}</div>
+				@end
+			</div>
+		</div>
+		<div class="dh"></div>
+		<div class="flex f-col">
+			<div>Type categories</div>
+			<div class="flex f-w tac gap-1">
+				@each(category in affect.categories.filter(e => ['social', 'introspective', 'cognitive', 'environmental', 'temporal', 'instinctual', 'existential'].includes(e)))
+					<div class="cut-border bs-1t1 f-g">{{ category[0].toUpperCase() + category.slice(1) }}</div>
+				@end
+			</div>
+		</div>
+		<div class="dh"></div>
+		<div class="flex f-col">
+			<div>Meta categories</div>
+			<div class="flex f-w tac gap-1">
+				@each(category in affect.categories.filter(e => !['positive', 'negative', 'ambiguous', 'other', 'social', 'introspective', 'cognitive', 'environmental', 'temporal', 'instinctual', 'existential'].includes(e)))
+					<div class="cut-border bs-1t1 f-g">{{ category[0].toUpperCase() + category.slice(1) }}</div>
+				@end
+			</div>
+		</div>
+		@if(affect.keywords)
+			<div class="dh"></div>
+			<div class="flex f-col">
+				<div>Keywords</div>
+				<div class="flex f-w tac gap-1 keywords">
+					@each(kw in affect.keywords.split(','))
+						<div class="cut-border bs-1t1 f-g">{{ kw.toLowerCase() }}</div>
+					@end
+				</div>
+			</div>
+		@end
+	</div>
+	<div id="info" class="grid h-fit gap-2">
+		@bordered({ id: 'name', class: ['flex', 'f-col', 'gap-1'] })
+			<h1>{{ affect.name }}</h1>
+			@if(affect.alt_names?.length > 0)
+				<span class="i">a.k.a. {{{ affect.alt_names.map(e => `<b>"${e}"</b>`).join(', ') }}}</span>
+			@end
+			@if(lister)
+				<span class="tp-2">
+					listed by
+					<a href="{{ route('profile.show', { username: lister.username }) }}">{{ '@' + lister.username }}</a>
+					on
+					@!timestamp({ date: affect.createdAt })
+					@if(affect.createdAt.toUnixInteger() !== affect.updatedAt.toUnixInteger())
+						- last updated on
+						@!timestamp({ date: affect.updatedAt })
+					@end
+				</span>
+			@else
+				<span class="tp-2">listed by <a>Nöos Corporation</a></span>
+			@end
+		@end
+		@bordered({ id: 'buy', class: ['flex', 'f-c', 'f-col', 'gap-1'] }) 
+			@!points({ value: affect.price })
+			@if(authUser)
+				@if(!authUser.cart.find(a => a.id === affect.id) && !authUser.inventory.find(a => a.id === affect.id))
+					@form({ action: route('cart.add', [affect.id]), class: ['w100'] })
+						@button({ type: 'submit', class: ['w100'] })
+							Buy
+						@end
+					@end
+				@else
+					@form({ action: route('profile.avatar', [affect.id]), class: ['w100'] })
+						@button({ type: 'submit', class: ['w100'] })
+							Set avatar
+						@end
+					@end
+				@end
+			@end
+		@end
+		@bordered({ id: 'desc', class: ['flex', 'f-col', 'f-w', 'gap-1'] })
+			@each(p in affect._desc.split('\n'))
+				<p>{{{ p }}}</p>
+			@end
+		@end
+		<div id="activity-comments">
+			@tabs({ class: ['flex', 'f-w'], selected_classes: ['cut-bless', 'bs-1t1'] })
+				@slot('tabs')
+				<button class="tab pad-1 lh-1 cut-bless bs-1t1">Comments
+					<span class="ts-2">{{ affect.comments?.length || 0 }}</span>
+				</button>
+					<button class="tab pad-1 lh-1">Activity</button>
+				@end
+				<div id="comments" class="panel cut-tless pad-2 bs-1t1 bb gap-2 flex f-col">
+					@if(authUser)
+						@form({ action: route('affects.comment', [affect.id]), class: ['w100', 'flex', 'gap-1'] })
+							<textarea name="body" id="commentbox" placeholder="Leave a comment" class="cut-border"></textarea>
+							@button({ type: 'submit' })
+								Post
+							@end
+						@end
+					@end
+					@if(affect.comments)
+						<div class="grid gap-1">
+							@each(comment in affect.comments)
+								@let(commenter = commenters.get(comment.user_id))
+								@if(commenter.avatar)
+									@!gensvg({ class: ['avatar', 'dib', 'pad-0'], input: commenter.avatar.seed, categories: commenter.avatar.categories, size: 64 })
+								@end
+								<span><a href="{{ route('profile.show', [commenter.user.id]) }}">{{ '@' + commenter.user.username }}</a>:</span>
+								<span class="f-g">{{ comment.body }}</span>
+								@!timestamp({ date: comment.createdAt })
+								<div class="dh"></div>
+							@end
+						</div>
+					@else
+						<div class="tac pad-2">No comments yet.</div>
+					@end
+				</div>
+				<div id="activity" class="panel cut-tless pad-2 bs-1t1 bb gap-2 dn">
+					@each(activity in affect.activities)
+						@!activity({ activity, affect, user: activityUsers.get(activity.user_id) })
+					@end
+				</div>
+			@end
+		</div>
+	</div>
+@end

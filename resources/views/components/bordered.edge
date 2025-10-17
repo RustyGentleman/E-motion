@@ -1,0 +1,3 @@
+<div {{ $props.merge({ class: ['cut-border', 'bs-1t1', 'pad-2'] }).toAttrs() }}>
+	{{{ await $slots.main() }}}
+</div>

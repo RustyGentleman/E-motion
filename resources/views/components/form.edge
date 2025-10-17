@@ -1,0 +1,12 @@
+@pushOnceTo('css')
+	<style>
+		.form-error {
+			font-size: .9rem;
+			color: var(--c-error);
+		}
+	</style>
+@end
+<form action="{{ action }}" method="{{ method?? 'POST' }}" {{ $props.toAttrs() }}>
+	{{ csrfField() }}
+	{{{ await $slots.main() }}}
+</form>
